@@ -1,0 +1,67 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+    }
+    sourceSets.main{
+        jniLibs.srcDir 'libs'
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    jcenter()
+    maven {
+        url 'https://maven.google.com/'
+        name 'Google'
+    }
+    maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
+    maven { url 'https://dl.bintray.com/ironsource-mobile/android-sdk' }
+    flatDir {
+        dirs 'libs', './libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+
+    //Facebook
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+
+    //MoPub
+    implementation ('com.mopub:mopub-sdk:5.4.0@aar') {
+        transitive = true
+    }
+// AppLovin
+    implementation 'com.applovin:applovin-sdk:8.1.4'
+    implementation 'com.mopub.mediation:applovin:8.1.4.0'
+
+// Google (AdMob)
+    implementation 'com.google.android.gms:play-services-ads:15.0.1'
+    implementation 'com.mopub.mediation:admob:15.0.1.0'
+
+// Facebook Audience Network
+    implementation 'com.facebook.android:audience-network-sdk:5.0.0'
+    implementation 'com.mopub.mediation:facebookaudiencenetwork:5.0.0.0'
+
+// ironSource
+    implementation 'com.ironsource.sdk:mediationsdk:6.7.11@jar'
+    implementation 'com.mopub.mediation:ironsource:6.7.11.0'
+// Chartboost
+// This mediated network SDK is not available on JCenter. Ensure you have downloaded and imported it manually into your app project.
+    //implementation 'com.mopub.mediation:chartboost:7.2.0.0'
+}
