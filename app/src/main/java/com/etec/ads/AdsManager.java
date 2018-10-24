@@ -127,28 +127,33 @@ public class AdsManager {
     }
 
     public void onStatusUpdate(String strData) {
+        Log.d(LOG_TAG, "onStatusUpdate "+strData);
         if (mStatusListener != null) {
             mStatusListener.call(strData);
         }
     }
 
     public static void export_init(String strJson) {
+        Log.d(LOG_TAG, "export_init "+strJson);
         AdsManager.instance().init(strJson);
     }
 
     public static void export_createAdsUnit(String strUnitID, String szClassName) {
+        Log.d(LOG_TAG, "export_createAdsUnit "+strUnitID+" szClassName "+szClassName);
         AdsManager.instance().createAdsUnit(strUnitID,szClassName);
     }
 
     public static void export_loadAdsUnit(String strUnitID) {
+        Log.d(LOG_TAG, "export_loadAdsUnit "+strUnitID);
         AdsManager.instance().loadAds(strUnitID);
     }
 
     public static void export_showAdsUnit(String strUnitID) {
+        Log.d(LOG_TAG, "export_showAdsUnit "+strUnitID);
         AdsManager.instance().showAds(strUnitID);
     }
 
     public static void export_closeAdsUnit(String strUnitID) {
-
+        Log.d(LOG_TAG, "export_closeAdsUnit "+strUnitID);
     }
 }
