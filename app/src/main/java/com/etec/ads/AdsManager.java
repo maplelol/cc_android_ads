@@ -40,6 +40,10 @@ public class AdsManager {
         return mInstance;
     }
 
+    public void setActivity(Activity act) {
+        this.mActivity = act;
+    }
+
     public Activity getActivity() {
         return mActivity;
     }
