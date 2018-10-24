@@ -37,6 +37,10 @@ public class AdsManager {
         return mActivity;
     }
 
+    public void init(String strJson) {
+
+    }
+
     public void createAdsUnit(String strUnitID, String szClassName) {
         AdsUnit ads = this.getAds(strUnitID);
         if (ads == null) {
@@ -100,6 +104,10 @@ public class AdsManager {
         if (mStatusListener != null) {
             mStatusListener.call(strData);
         }
+    }
+
+    public static void export_init(String strJson) {
+        AdsManager.instance().init(strJson);
     }
 
     public static void export_createAdsUnit(String strUnitID, String szClassName) {
