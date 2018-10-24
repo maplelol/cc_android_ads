@@ -9,6 +9,13 @@ import com.etec.ads.FAN.FANInterstitial;
 import com.etec.ads.FAN.FANRewardedVideo;
 import com.etec.ads.MoPub.MoPubInterstitial;
 import com.etec.ads.MoPub.MoPubRewardedVideo;
+import com.google.android.gms.ads.MobileAds;
+import com.mopub.common.MoPub;
+import com.mopub.common.SdkConfiguration;
+import com.mopub.common.SdkInitializationListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +45,25 @@ public class AdsManager {
     }
 
     public void init(String strJson) {
+        try {
+            JSONObject jsonData = new JSONObject(strJson);
+            String admobAppID = jsonData.getString("admob_app_id");
+            if (!admobAppID.isEmpty()) {
+                MobileAds.initialize(this.getActivity(), admobAppID);
+            }
+            String mopubUnitID = jsonData.getString("mopub_unit_id");
+            if (!mopubUnitID.isEmpty()) {
+                SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(mopubUnitID).build();
+                MoPub.initializeSdk(this.getActivity(),sdkConfiguration,new SdkInitializationListener() {
+                    @Override
+                    public void onInitializationFinished() {
+                        Log.d(LOG_TAG, "MoPubAds onInitializationFinished");
+                    }
+                });
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
