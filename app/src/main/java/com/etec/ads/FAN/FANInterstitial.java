@@ -14,19 +14,20 @@ public class FANInterstitial extends AdsUnit implements InterstitialAdListener {
         super(strUnitID);
     }
 
-    public boolean isLoaded() {
-        return this.mAd != null && this.mAd.isAdLoaded();
-    }
-
-    public void load() {
-        if (this.mAd == null) {
-            this.mAd = new InterstitialAd(AdsManager.instance().getActivity(),this.mStrUnitID);
-            this.mAd.setAdListener(this);
-            this.mAd.loadAd();
+    @Override
+    public void load(String strUnitName) {
+        if (!this.checkToLoad()) {
+            return;
         }
+
+        this.mAd = new InterstitialAd(AdsManager.instance().getActivity(),this.mStrUnitID);
+        this.mAd.setAdListener(this);
+        this.mAd.loadAd();
+        this.setLoading(true);
     }
 
-    public void show() {
+    @Override
+    public void show(String strUnitName) {
         if (this.isLoaded()) {
             this.mAd.show();
         }
@@ -44,6 +45,8 @@ public class FANInterstitial extends AdsUnit implements InterstitialAdListener {
         System.out.println("FANInterstitial onInterstitialDismissed");
 
         this.mAd = null;
+        this.setLoaded(false);
+        this.setLoading(false);
         this.onStatusUpdate("closed");
     }
 
@@ -52,6 +55,8 @@ public class FANInterstitial extends AdsUnit implements InterstitialAdListener {
         System.out.println("FANInterstitial onError:"+adError.getErrorMessage());
 
         this.mAd = null;
+        this.setLoaded(false);
+        this.setLoading(false);
         this.onStatusUpdate("error");
     }
 
@@ -59,6 +64,8 @@ public class FANInterstitial extends AdsUnit implements InterstitialAdListener {
     public void onAdLoaded(Ad ad) {
         System.out.println("FANInterstitial onAdLoaded");
 
+        this.setLoaded(true);
+        this.setLoading(false);
         this.onStatusUpdate("loaded");
     }
 

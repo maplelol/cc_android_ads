@@ -13,7 +13,7 @@
         android:paddingBottom="5dp">
 
         <com.facebook.ads.AdIconView
-            android:id="@+id/native_ad_icon"
+            android:id="@+id/xad_icon"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_gravity="center_vertical" />
@@ -27,7 +27,7 @@
             android:paddingLeft="5dp">
 
             <TextView
-                android:id="@+id/native_ad_title"
+                android:id="@+id/xad_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="false"
@@ -37,7 +37,7 @@
                 android:textSize="10sp" />
 
             <TextView
-                android:id="@+id/native_ad_social_context"
+                android:id="@+id/xad_social_context"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="false"
@@ -47,7 +47,7 @@
         </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/ad_choices_container"
+            android:id="@+id/xad_choices_container"
             android:layout_width="80dp"
             android:layout_height="50dp"
             android:gravity="right">
@@ -75,7 +75,7 @@
     </LinearLayout>
 
     <com.facebook.ads.MediaView
-        android:id="@+id/native_ad_media"
+        android:id="@+id/xad_media"
         android:layout_width="wrap_content"
         android:layout_height="150dp"
         android:gravity="center">
@@ -90,7 +90,7 @@
         android:paddingTop="5dp">
 
         <TextView
-            android:id="@+id/native_ad_body"
+            android:id="@+id/xad_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="3"
@@ -103,7 +103,7 @@
             android:textSize="8sp" />
 
         <Button
-            android:id="@+id/native_ad_call_to_action"
+            android:id="@+id/xad_cta"
             android:layout_width="100dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"

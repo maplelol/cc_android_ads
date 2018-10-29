@@ -15,8 +15,9 @@ public class MoPubInterstitial extends AdsUnit implements com.mopub.mobileads.Mo
         return this.mAd != null && this.mAd.isReady();
     }
 
-    public void load() {
-        if (this.isLoaded()) {
+    @Override
+    public void load(String strUnitName) {
+        if (!this.checkToLoad()) {
             return;
         }
 
@@ -25,9 +26,11 @@ public class MoPubInterstitial extends AdsUnit implements com.mopub.mobileads.Mo
             this.mAd.setInterstitialAdListener(this);
         }
         this.mAd.load();
+        this.setLoading(true);
     }
 
-    public void show() {
+    @Override
+    public void show(String strUnitName) {
         if (this.isLoaded()) {
             this.mAd.show();
         }
@@ -37,6 +40,8 @@ public class MoPubInterstitial extends AdsUnit implements com.mopub.mobileads.Mo
     public void onInterstitialLoaded(com.mopub.mobileads.MoPubInterstitial interstitial) {
         System.out.println("MoPubInterstitial onInterstitialLoaded");
 
+        this.setLoaded(true);
+        this.setLoading(false);
         this.onStatusUpdate("loaded");
     }
 
@@ -44,6 +49,8 @@ public class MoPubInterstitial extends AdsUnit implements com.mopub.mobileads.Mo
     public void onInterstitialFailed(com.mopub.mobileads.MoPubInterstitial interstitial, MoPubErrorCode errorCode) {
         System.out.println("MoPubInterstitial onInterstitialFailed errorCode="+errorCode);
 
+        this.setLoaded(false);
+        this.setLoading(false);
         this.onStatusUpdate("error");
     }
 
@@ -63,6 +70,8 @@ public class MoPubInterstitial extends AdsUnit implements com.mopub.mobileads.Mo
     public void onInterstitialDismissed(com.mopub.mobileads.MoPubInterstitial interstitial) {
         System.out.println("MoPubInterstitial onInterstitialDismissed");
 
+        this.setLoading(false);
+        this.setLoaded(false);
         this.onStatusUpdate("closed");
     }
 }

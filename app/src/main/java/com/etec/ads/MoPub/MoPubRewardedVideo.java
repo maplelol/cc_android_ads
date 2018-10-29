@@ -10,31 +10,25 @@ import com.mopub.mobileads.MoPubRewardedVideos;
 import java.util.Set;
 
 public class MoPubRewardedVideo extends AdsUnit {
-    private boolean mIsLoaded;
-
     protected static MoPubRewardedVideoListener mMoPubRewardedVideoListener = null;
 
     public MoPubRewardedVideo(String strUnitID) {
         super(strUnitID);
+    }
+
+    @Override
+    public void load(String strUnitName) {
+        if (!this.checkToLoad()) {
+            return;
+        }
 
         initListener();
+        MoPubRewardedVideos.loadRewardedVideo(this.mStrUnitID);
+        this.setLoading(true);
     }
 
-    public boolean isLoaded() {
-        return this.mIsLoaded;
-    }
-
-    public void load() {
-        if (!this.isLoaded()) {
-            MoPubRewardedVideos.loadRewardedVideo(this.mStrUnitID);
-        }
-    }
-
-    public void setLoaded(boolean isLoaded) {
-        this.mIsLoaded = isLoaded;
-    }
-
-    public void show() {
+    @Override
+    public void show(String strUnitName) {
         if (this.isLoaded()) {
             MoPubRewardedVideos.showRewardedVideo(this.mStrUnitID);
         }
@@ -51,6 +45,7 @@ public class MoPubRewardedVideo extends AdsUnit {
                     AdsUnit ad = AdsManager.instance().getAds(adUnitId);
                     if (ad != null) {
                         ad.setLoaded(true);
+                        ad.setLoading(false);
                         ad.onStatusUpdate("loaded");
                     }
                 }
@@ -63,6 +58,7 @@ public class MoPubRewardedVideo extends AdsUnit {
                     AdsUnit ad = AdsManager.instance().getAds(adUnitId);
                     if (ad != null) {
                         ad.setLoaded(false);
+                        ad.setLoading(false);
                         ad.onStatusUpdate("error");
                     }
                 }
@@ -86,6 +82,7 @@ public class MoPubRewardedVideo extends AdsUnit {
                     AdsUnit ad = AdsManager.instance().getAds(adUnitId);
                     if (ad != null) {
                         ad.setLoaded(false);
+                        ad.setLoading(false);
                         ad.onStatusUpdate("error");
                     }
                 }
@@ -103,6 +100,7 @@ public class MoPubRewardedVideo extends AdsUnit {
                     AdsUnit ad = AdsManager.instance().getAds(adUnitId);
                     if (ad != null) {
                         ad.setLoaded(false);
+                        ad.setLoading(false);
                         ad.onStatusUpdate("closed");
                     }
                 }
@@ -122,6 +120,7 @@ public class MoPubRewardedVideo extends AdsUnit {
                     }
                 }
             };
+            MoPubRewardedVideos.setRewardedVideoListener(mMoPubRewardedVideoListener);
         }
     }
 }

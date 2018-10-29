@@ -7,6 +7,8 @@ import org.json.JSONObject;
 
 public class AdsUnit {
     protected String mStrUnitID;
+    protected boolean mIsLoaded = false;
+    protected boolean mIsLoading = false;
 
     public AdsUnit(String strUnitID) {
         this.mStrUnitID = strUnitID;
@@ -16,20 +18,27 @@ public class AdsUnit {
         return this.mStrUnitID;
     }
 
-    public void load() {
+    public void load(String strUnitName) {
 
     }
 
     public boolean isLoaded() {
-        return false;
+        return mIsLoaded;
     }
 
-    public void setLoaded(boolean isLoaded) {
+    public void setLoaded(boolean is) {
+        mIsLoaded = is;
+    }
+    public void setLoading(boolean is) {
+        mIsLoading = is;
+    }
+
+    public void show(String strUnitName) {
 
     }
 
-    public void show() {
-
+    public boolean checkToLoad() {
+        return !mIsLoading && !mIsLoaded;
     }
 
     public void onStatusUpdate(String strStatus) {

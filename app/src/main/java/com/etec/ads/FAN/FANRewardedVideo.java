@@ -19,16 +19,21 @@ public class FANRewardedVideo extends AdsUnit implements RewardedVideoAdListener
         return this.mAd != null && this.mAd.isAdLoaded();
     }
 
-    public void load() {
-        if (this.mAd == null) {
-            this.mAd = new RewardedVideoAd(AdsManager.instance().getActivity(),this.mStrUnitID);
-            this.mAd.setAdListener(this);
-            this.mAd.setRewardData(new RewardData("", ""));
-            this.mAd.loadAd();
+    @Override
+    public void load(String strUnitName) {
+        if (!this.checkToLoad()) {
+            return;
         }
+
+        this.mAd = new RewardedVideoAd(AdsManager.instance().getActivity(),this.mStrUnitID);
+        this.mAd.setAdListener(this);
+        this.mAd.setRewardData(new RewardData("", ""));
+        this.mAd.loadAd();
+        this.setLoading(true);
     }
 
-    public void show() {
+    @Override
+    public void show(String strUnitName) {
         if (this.isLoaded()) {
             this.mAd.show();
         }
@@ -39,6 +44,8 @@ public class FANRewardedVideo extends AdsUnit implements RewardedVideoAdListener
         System.out.println("FANRewardedVideo onError:"+adError.getErrorMessage());
 
         this.mAd = null;
+        this.setLoaded(false);
+        this.setLoading(false);
         this.onStatusUpdate("error");
     }
 
@@ -46,6 +53,8 @@ public class FANRewardedVideo extends AdsUnit implements RewardedVideoAdListener
     public void onAdLoaded(Ad ad) {
         System.out.println("FANRewardedVideo onAdLoaded");
 
+        this.setLoaded(true);
+        this.setLoading(false);
         this.onStatusUpdate("loaded");
     }
 
@@ -72,6 +81,8 @@ public class FANRewardedVideo extends AdsUnit implements RewardedVideoAdListener
         System.out.println("FANRewardedVideo onRewardedVideoClosed");
 
         this.mAd = null;
+        this.setLoaded(false);
+        this.setLoading(false);
         this.onStatusUpdate("closed");
     }
 }

@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.etec.ads.Admob.AdmobInterstitial;
+import com.etec.ads.Admob.AdmobNative;
 import com.etec.ads.Admob.AdmobRewardedVideo;
 import com.etec.ads.FAN.FANInterstitial;
+import com.etec.ads.FAN.FANNative;
 import com.etec.ads.FAN.FANRewardedVideo;
 import com.etec.ads.MoPub.MoPubInterstitial;
+import com.etec.ads.MoPub.MoPubNative;
 import com.etec.ads.MoPub.MoPubRewardedVideo;
 import com.google.android.gms.ads.MobileAds;
 import com.mopub.common.MoPub;
@@ -17,6 +20,7 @@ import com.mopub.common.SdkInitializationListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,11 +30,14 @@ public class AdsManager {
 
     protected Activity mActivity;
     protected Map<String,AdsUnit> mUnitMap;
+    protected int mLogoResID = -1;
 
     protected AdsStatusUpdateListener mStatusListener;
 
+    protected boolean mIsInitialized = false;
+
     protected AdsManager() {
-        mUnitMap = new HashMap<String,AdsUnit>();
+        mUnitMap = new HashMap<>();
     }
 
     public static AdsManager instance() {
@@ -38,6 +45,12 @@ public class AdsManager {
             mInstance = new AdsManager();
         }
         return mInstance;
+    }
+
+    public void initialize(Activity act, AdsStatusUpdateListener l, int iSplashLogoID) {
+        this.setActivity(act);
+        this.setStatusUpdateListener(l);
+        this.setSplashLogoID(iSplashLogoID);
     }
 
     public void setActivity(Activity act) {
@@ -48,23 +61,41 @@ public class AdsManager {
         return mActivity;
     }
 
+    public void setSplashLogoID(int iResID) {
+        mLogoResID = iResID;
+    }
+
+    public int getSplashLogoID() {
+        return mLogoResID;
+    }
+
     public void init(String strJson) {
         try {
+            mIsInitialized = true;
             JSONObject jsonData = new JSONObject(strJson);
-            String admobAppID = jsonData.getString("admob_app_id");
-            if (!admobAppID.isEmpty()) {
+            if (jsonData.has("admob_app_id")) {
+                String admobAppID = jsonData.getString("admob_app_id");
                 MobileAds.initialize(this.getActivity(), admobAppID);
             }
-            String mopubUnitID = jsonData.getString("mopub_unit_id");
-            if (!mopubUnitID.isEmpty()) {
-                SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(mopubUnitID).build();
+
+            if (jsonData.has("mopub_unit_id")) {
+                final AdsManager mThis = this;
+                mIsInitialized = false; //MoPub的初始化是个异步的过程，所以需要等待回调
+                String mopubUnitID = jsonData.getString("mopub_unit_id");
+                SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(mopubUnitID)
+                        .withNetworksToInit(new ArrayList<String>())
+                        .build();
                 MoPub.initializeSdk(this.getActivity(),sdkConfiguration,new SdkInitializationListener() {
                     @Override
                     public void onInitializationFinished() {
+                        mIsInitialized = true;
+                        mThis.checkInitialized();
                         Log.d(LOG_TAG, "MoPubAds onInitializationFinished");
                     }
                 });
             }
+
+            this.checkInitialized();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -74,18 +105,24 @@ public class AdsManager {
     public void createAdsUnit(String strUnitID, String szClassName) {
         AdsUnit ads = this.getAds(strUnitID);
         if (ads == null) {
-            if (szClassName == "FANInterstitial") {
+            if (szClassName.equals("FANInterstitial")) {
                 ads = new FANInterstitial(strUnitID);
-            } else if (szClassName == "FANRewardedVideo") {
+            } else if (szClassName.equals("FANRewardedVideo")) {
                 ads = new FANRewardedVideo(strUnitID);
-            } else if (szClassName == "AdmobInterstitial") {
+            } else if (szClassName.equals("FANNativeSplash") || szClassName.equals("FANNativeExit")) {
+                ads = new FANNative(strUnitID);
+            } else if (szClassName.equals("AdmobInterstitial")) {
                 ads = new AdmobInterstitial(strUnitID);
-            } else if (szClassName == "AdmobRewardedVideo") {
+            } else if (szClassName.equals("AdmobRewardedVideo")) {
                 ads = new AdmobRewardedVideo(strUnitID);
-            } else if (szClassName == "MoPubInterstitial") {
+            } else if (szClassName.equals("AdmobNativeSplash") || szClassName.equals("AdmobNativeExit")) {
+                ads = new AdmobNative(strUnitID);
+            } else if (szClassName.equals("MoPubInterstitial")) {
                 ads = new MoPubInterstitial(strUnitID);
-            } else if (szClassName == "MoPubRewardedVideo") {
+            } else if (szClassName.equals("MoPubRewardedVideo")) {
                 ads = new MoPubRewardedVideo(strUnitID);
+            } else if (szClassName.equals("MoPubNativeSplash") || szClassName.equals("MoPubNativeExit")) {
+                ads = new MoPubNative(strUnitID);
             }
 
             if (ads != null) {
@@ -96,10 +133,10 @@ public class AdsManager {
         }
     }
 
-    public void loadAds(String strUnitID) {
+    public void loadAds(String strUnitID,String strUnitName) {
         AdsUnit ads = mUnitMap.get(strUnitID);
         if (ads != null) {
-            ads.load();
+            ads.load(strUnitName);
         }
     }
 
@@ -111,10 +148,11 @@ public class AdsManager {
         return false;
     }
 
-    public void showAds(String strUnitID) {
+    public void showAds(String strUnitID,String strUnitName) {
         AdsUnit ads = mUnitMap.get(strUnitID);
         if (ads != null) {
-            ads.show();
+            Log.d(LOG_TAG, "showAds strUnitName="+strUnitName);
+            ads.show(strUnitName);
         }
     }
 
@@ -137,9 +175,26 @@ public class AdsManager {
         }
     }
 
-    public static void export_init(String strJson) {
+    public void checkInitialized() {
+        if (this.mIsInitialized) {
+            JSONObject resultJson = new JSONObject();
+            try {
+                resultJson.put("status","init");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            this.onStatusUpdate(resultJson.toString());
+        }
+    }
+
+    public static void export_init(final String strJson) {
         Log.d(LOG_TAG, "export_init "+strJson);
-        AdsManager.instance().init(strJson);
+        AdsManager.instance().getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AdsManager.instance().init(strJson);
+            }
+        });
     }
 
     public static void export_createAdsUnit(String strUnitID, String szClassName) {
@@ -147,14 +202,24 @@ public class AdsManager {
         AdsManager.instance().createAdsUnit(strUnitID,szClassName);
     }
 
-    public static void export_loadAdsUnit(String strUnitID) {
-        Log.d(LOG_TAG, "export_loadAdsUnit "+strUnitID);
-        AdsManager.instance().loadAds(strUnitID);
+    public static void export_loadAdsUnit(final String strUnitID, final String strUnitName) {
+        Log.d(LOG_TAG, "export_loadAdsUnit strUnitID="+strUnitID+" strUnitName="+strUnitName);
+        AdsManager.instance().getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AdsManager.instance().loadAds(strUnitID,strUnitName);
+            }
+        });
     }
 
-    public static void export_showAdsUnit(String strUnitID) {
-        Log.d(LOG_TAG, "export_showAdsUnit "+strUnitID);
-        AdsManager.instance().showAds(strUnitID);
+    public static void export_showAdsUnit(final String strUnitID, final String strUnitName) {
+        Log.d(LOG_TAG, "export_showAdsUnit strUnitID="+strUnitID+" strUnitName="+strUnitName);
+        AdsManager.instance().getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AdsManager.instance().showAds(strUnitID,strUnitName);
+            }
+        });
     }
 
     public static void export_closeAdsUnit(String strUnitID) {

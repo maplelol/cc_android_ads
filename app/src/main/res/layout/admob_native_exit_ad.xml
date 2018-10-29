@@ -98,7 +98,7 @@
 
         </LinearLayout>
 
-        <com.mopub.nativeads.MediaLayout
+        <com.google.android.gms.ads.formats.MediaView
             android:id="@+id/xad_media"
             android:layout_width="match_parent"
             android:layout_height="150dp"

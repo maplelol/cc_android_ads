@@ -11,17 +11,16 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 public class AdmobRewardedVideo extends AdsUnit implements RewardedVideoAdListener {
     private RewardedVideoAd mAd;
 
-    private String mStrUnitID;
-
     public AdmobRewardedVideo(String strUnitID) {
         super(strUnitID);
     }
 
-    public boolean isLoaded() {
-        return this.mAd != null && this.mAd.isLoaded();
-    }
+    @Override
+    public void load(String strUnitName) {
+        if (!this.checkToLoad()) {
+            return;
+        }
 
-    public void load() {
         if (this.mAd == null) {
             this.mAd = MobileAds.getRewardedVideoAdInstance(AdsManager.instance().getActivity());
             this.mAd.setRewardedVideoAdListener(this);
@@ -29,9 +28,11 @@ public class AdmobRewardedVideo extends AdsUnit implements RewardedVideoAdListen
 
         AdRequest adRequest = new AdRequest.Builder().build();
         this.mAd.loadAd(this.mStrUnitID,adRequest);
+        this.setLoading(true);
     }
 
-    public void show() {
+    @Override
+    public void show(String strUnitName) {
         if (this.isLoaded()) {
             this.mAd.show();
         }
@@ -40,6 +41,8 @@ public class AdmobRewardedVideo extends AdsUnit implements RewardedVideoAdListen
     public void onRewardedVideoAdLoaded() {
         System.out.println("AdmobRewardedVideo onRewardedVideoAdLoaded");
 
+        this.setLoaded(true);
+        this.setLoading(false);
         this.onStatusUpdate("loaded");
     }
 
@@ -56,6 +59,8 @@ public class AdmobRewardedVideo extends AdsUnit implements RewardedVideoAdListen
     public void onRewardedVideoAdClosed() {
         System.out.println("AdmobRewardedVideo onRewardedVideoAdClosed");
 
+        this.setLoaded(false);
+        this.setLoading(false);
         this.onStatusUpdate("closed");
     }
 
@@ -76,6 +81,8 @@ public class AdmobRewardedVideo extends AdsUnit implements RewardedVideoAdListen
     public void onRewardedVideoAdFailedToLoad(int var1) {
         System.out.println("AdmobRewardedVideo onRewardedVideoAdFailedToLoad");
 
+        this.setLoaded(false);
+        this.setLoading(false);
         this.onStatusUpdate("error");
     }
 }
