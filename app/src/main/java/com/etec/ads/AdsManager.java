@@ -48,6 +48,7 @@ public class AdsManager {
     }
 
     public void initialize(Activity act, AdsStatusUpdateListener l, int iSplashLogoID) {
+        System.out.println("AdsManager initialize");
         this.setActivity(act);
         this.setStatusUpdateListener(l);
         this.setSplashLogoID(iSplashLogoID);
