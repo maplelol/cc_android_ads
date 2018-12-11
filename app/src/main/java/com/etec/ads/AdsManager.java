@@ -2,6 +2,8 @@ package com.etec.ads;
 
 import android.app.Activity;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.etec.ads.Admob.AdmobInterstitial;
 import com.etec.ads.Admob.AdmobNative;
@@ -12,6 +14,8 @@ import com.etec.ads.FAN.FANRewardedVideo;
 import com.etec.ads.MoPub.MoPubInterstitial;
 import com.etec.ads.MoPub.MoPubNative;
 import com.etec.ads.MoPub.MoPubRewardedVideo;
+import com.facebook.ads.AdSettings;
+import com.facebook.ads.AudienceNetworkAds;
 import com.google.android.gms.ads.MobileAds;
 import com.mopub.common.MoPub;
 import com.mopub.common.SdkConfiguration;
@@ -48,10 +52,12 @@ public class AdsManager {
     }
 
     public void initialize(Activity act, AdsStatusUpdateListener l, int iSplashLogoID) {
-        System.out.println("AdsManager initialize");
         this.setActivity(act);
         this.setStatusUpdateListener(l);
         this.setSplashLogoID(iSplashLogoID);
+
+        //AdSettings.addTestDevice("02d126ff-8c0f-4baa-b2b9-1012d0f03645");
+        //AudienceNetworkAds.initialize(act);
     }
 
     public void setActivity(Activity act) {
@@ -225,5 +231,17 @@ public class AdsManager {
 
     public static void export_closeAdsUnit(String strUnitID) {
         Log.d(LOG_TAG, "export_closeAdsUnit "+strUnitID);
+    }
+
+    public static void setViewClickable(View v, boolean e) {
+        v.setClickable(e);
+        v.setOnTouchListener(null);
+        v.setOnClickListener(null);
+        if (v instanceof ViewGroup) {
+            ViewGroup vg = ((ViewGroup) v);
+            for (int i = 0; i < vg.getChildCount(); i++) {
+                setViewClickable(vg.getChildAt(i),e);
+            }
+        }
     }
 }

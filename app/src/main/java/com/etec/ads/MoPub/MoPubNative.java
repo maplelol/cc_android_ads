@@ -57,6 +57,9 @@ public class MoPubNative extends AdsUnit implements View.OnClickListener {
             NativeExitView.instance().show(v, this);
         }
 
+        AdsManager.setViewClickable(v.findViewById(R.id.xad_icon),false);
+        //AdsManager.setViewClickable(v.findViewById(R.id.xad_media),false);
+
         this.onStatusUpdate("show");
     }
 

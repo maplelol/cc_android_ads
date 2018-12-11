@@ -93,6 +93,7 @@ public class FANNative extends AdsUnit implements NativeAdListener,View.OnClickL
     public void onError(Ad ad, AdError adError) {
         System.out.println("FANNative onError:"+adError.getErrorMessage());
 
+        this.mAd.destroy();
         this.mAd = null;
         this.setLoaded(false);
         this.setLoading(false);
@@ -130,6 +131,7 @@ public class FANNative extends AdsUnit implements NativeAdListener,View.OnClickL
         if (v.getId() == R.id.btn_close_native_ad) {
             NativeSplashView.instance().close();
 
+            this.mAd.destroy();
             this.mAd = null;
             this.setLoaded(false);
             this.setLoading(false);
@@ -144,6 +146,7 @@ public class FANNative extends AdsUnit implements NativeAdListener,View.OnClickL
         } else if (v.getId() == R.id.btn_native_exit_cancel) {
             NativeExitView.instance().close();
 
+            this.mAd.destroy();
             this.mAd = null;
             this.setLoaded(false);
             this.setLoading(false);

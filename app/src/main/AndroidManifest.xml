@@ -11,7 +11,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
 
-    <application>
+    <application
+        android:hardwareAccelerated="true">
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -27,8 +28,6 @@
         <!--MoPub-->
 
         <!--AppLovin-->
-        <!--<meta-data android:name="applovin.sdk.key"-->
-            <!--android:value="your_key"/>-->
         <activity android:name="com.applovin.adview.AppLovinInterstitialActivity" android:configChanges="orientation|screenSize"/>
         <activity android:name="com.applovin.adview.AppLovinConfirmationActivity" android:configChanges="orientation|screenSize"/>
 

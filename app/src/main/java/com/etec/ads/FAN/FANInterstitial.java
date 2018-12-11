@@ -44,6 +44,7 @@ public class FANInterstitial extends AdsUnit implements InterstitialAdListener {
     public void onInterstitialDismissed(Ad ad) {
         System.out.println("FANInterstitial onInterstitialDismissed");
 
+        this.mAd.destroy();
         this.mAd = null;
         this.setLoaded(false);
         this.setLoading(false);
@@ -54,6 +55,7 @@ public class FANInterstitial extends AdsUnit implements InterstitialAdListener {
     public void onError(Ad ad, AdError adError) {
         System.out.println("FANInterstitial onError:"+adError.getErrorMessage());
 
+        this.mAd.destroy();
         this.mAd = null;
         this.setLoaded(false);
         this.setLoading(false);

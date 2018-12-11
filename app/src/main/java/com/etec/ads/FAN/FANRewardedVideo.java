@@ -4,6 +4,7 @@ import com.etec.ads.AdsManager;
 import com.etec.ads.AdsUnit;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
+import com.facebook.ads.AdSettings;
 import com.facebook.ads.RewardData;
 import com.facebook.ads.RewardedVideoAd;
 import com.facebook.ads.RewardedVideoAdListener;
@@ -43,6 +44,7 @@ public class FANRewardedVideo extends AdsUnit implements RewardedVideoAdListener
     public void onError(Ad ad, AdError adError) {
         System.out.println("FANRewardedVideo onError:"+adError.getErrorMessage());
 
+        this.mAd.destroy();
         this.mAd = null;
         this.setLoaded(false);
         this.setLoading(false);
@@ -80,6 +82,7 @@ public class FANRewardedVideo extends AdsUnit implements RewardedVideoAdListener
     public void onRewardedVideoClosed() {
         System.out.println("FANRewardedVideo onRewardedVideoClosed");
 
+        this.mAd.destroy();
         this.mAd = null;
         this.setLoaded(false);
         this.setLoading(false);
