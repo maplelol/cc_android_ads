@@ -244,4 +244,29 @@ public class AdsManager {
             }
         }
     }
+
+    public void onCreate(Activity act) {
+        MoPub.onCreate(act);
+    }
+    public void onPause(Activity act) {
+        MoPub.onPause(act);
+    }
+    public void onResume(Activity act) {
+        MoPub.onResume(act);
+    }
+    public void onStart(Activity act) {
+        MoPub.onStart(act);
+    }
+    public void onRestart(Activity act) {
+        MoPub.onRestart(act);
+    }
+    public void onStop(Activity act) {
+        MoPub.onStop(act);
+    }
+    public void onDestroy(Activity act) {
+        MoPub.onDestroy(act);
+    }
+    public void onBackPressed(Activity act) {
+        MoPub.onBackPressed(act);
+    }
 }
