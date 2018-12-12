@@ -95,8 +95,8 @@ public class AdsManager {
                 MoPub.initializeSdk(this.getActivity(),sdkConfiguration,new SdkInitializationListener() {
                     @Override
                     public void onInitializationFinished() {
-                        //mIsInitialized = true;
-                        //mThis.checkInitialized();
+                        mIsInitialized = true;
+                        mThis.checkInitialized();
                         Log.d(LOG_TAG, "MoPubAds onInitializationFinished");
                     }
                 });
