@@ -95,19 +95,14 @@ public class AdsManager {
                 MoPub.initializeSdk(this.getActivity(),sdkConfiguration,new SdkInitializationListener() {
                     @Override
                     public void onInitializationFinished() {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mIsInitialized = true;
-                                checkInitialized();
-                                Log.d(LOG_TAG, "MoPubAds onInitializationFinished");
-                            }
-                        });
+                        mIsInitialized = true;
+                        //checkInitialized();
+                        Log.d(LOG_TAG, "MoPubAds onInitializationFinished");
                     }
                 });
             }
 
-            this.checkInitialized();
+            //this.checkInitialized();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -143,6 +138,10 @@ public class AdsManager {
                 Log.d(LOG_TAG,"error: can not find implementation for ads "+szClassName);
             }
         }
+    }
+
+    public boolean isInitialized() {
+        return mIsInitialized;
     }
 
     public void loadAds(String strUnitID,String strUnitName) {
@@ -236,6 +235,10 @@ public class AdsManager {
 
     public static void export_closeAdsUnit(String strUnitID) {
         Log.d(LOG_TAG, "export_closeAdsUnit "+strUnitID);
+    }
+
+    public static boolean export_isInitialized() {
+        return AdsManager.instance().isInitialized();
     }
 
     public static void setViewClickable(View v, boolean e) {
