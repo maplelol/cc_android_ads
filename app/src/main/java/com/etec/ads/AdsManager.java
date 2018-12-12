@@ -92,7 +92,19 @@ public class AdsManager {
                 SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(mopubUnitID)
                         .withNetworksToInit(new ArrayList<String>())
                         .build();
-                MoPub.initializeSdk(this.getActivity(),sdkConfiguration,initSdkListener());
+                MoPub.initializeSdk(this.getActivity(),sdkConfiguration,new SdkInitializationListener() {
+                    @Override
+                    public void onInitializationFinished() {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mIsInitialized = true;
+                                checkInitialized();
+                                Log.d(LOG_TAG, "MoPubAds onInitializationFinished");
+                            }
+                        });
+                    }
+                });
             }
 
             this.checkInitialized();
@@ -236,18 +248,6 @@ public class AdsManager {
                 setViewClickable(vg.getChildAt(i),e);
             }
         }
-    }
-
-
-    private SdkInitializationListener initSdkListener() {
-        return new SdkInitializationListener() {
-            @Override
-            public void onInitializationFinished() {
-                mIsInitialized = true;
-                checkInitialized();
-                Log.d(LOG_TAG, "MoPubAds onInitializationFinished");
-            }
-        };
     }
 
     public void onCreate(Activity act) {
