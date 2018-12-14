@@ -78,12 +78,15 @@ public class AdsManager {
 
     public void init(String strJson) {
         try {
-            mIsInitialized = true;
+            mIsInitialized = false;
             JSONObject jsonData = new JSONObject(strJson);
             if (jsonData.has("admob_app_id")) {
+                Log.d(LOG_TAG, "AdmobAds start initialize");
                 String admobAppID = jsonData.getString("admob_app_id");
                 MobileAds.initialize(this.getActivity(), admobAppID);
+                Log.d(LOG_TAG, "AdmobAds initialized");
             }
+            mIsInitialized = true;
 
             if (jsonData.has("mopub_unit_id")) {
                 final AdsManager mThis = this;
@@ -92,6 +95,7 @@ public class AdsManager {
                 SdkConfiguration sdkConfiguration = new SdkConfiguration.Builder(mopubUnitID)
                         .withNetworksToInit(new ArrayList<String>())
                         .build();
+                Log.d(LOG_TAG, "MoPubAds start initialize");
                 MoPub.initializeSdk(this.getActivity(),sdkConfiguration,new SdkInitializationListener() {
                     @Override
                     public void onInitializationFinished() {
