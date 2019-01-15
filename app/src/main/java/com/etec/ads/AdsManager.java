@@ -15,6 +15,7 @@ import com.etec.ads.MoPub.MoPubInterstitial;
 import com.etec.ads.MoPub.MoPubNative;
 import com.etec.ads.MoPub.MoPubRewardedVideo;
 import com.facebook.ads.AdSettings;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.ads.AudienceNetworkAds;
 import com.google.android.gms.ads.MobileAds;
 import com.mopub.common.MoPub;
@@ -31,7 +32,7 @@ import java.util.Map;
 public class AdsManager {
     protected static final String LOG_TAG = "com.etec.ads.AdsManager";
     protected static AdsManager mInstance;
-
+    protected static AppEventsLogger mAppEventsLogger;
     protected Activity mActivity;
     protected Map<String,AdsUnit> mUnitMap;
     protected int mLogoResID = -1;
@@ -55,7 +56,8 @@ public class AdsManager {
         this.setActivity(act);
         this.setStatusUpdateListener(l);
         this.setSplashLogoID(iSplashLogoID);
-
+        
+        mAppEventsLogger = AppEventsLogger.newLogger(mActivity);
         //AdSettings.addTestDevice("02d126ff-8c0f-4baa-b2b9-1012d0f03645");
         //AudienceNetworkAds.initialize(act);
     }
@@ -244,6 +246,39 @@ public class AdsManager {
     public static boolean export_isInitialized() {
         return AdsManager.instance().isInitialized();
     }
+
+    public static void export_EventsLogger(final String szEventName,final String szJsonArg){
+        Bundle params = new Bundle();
+        try {
+            JSONObject resultJson = new JSONObject(szJsonArg);
+            Iterator it = resultJson.keys();
+            while (it.hasNext()) {
+                String key = (String)it.next();
+                String value = resultJson.getString(key);
+                try{
+                    params.putInt(key,Integer.parseInt(value));
+                }catch (NumberFormatException e){
+                    try{
+                        params.putDouble(key,Double.parseDouble(value));
+                    }catch (NumberFormatException x) {
+                        //不是整数，就直接发送字符串
+                        params.putString(key,value);
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        mAppEventsLogger.logEvent(szEventName, params);
+
+//        params.putString(AppEventsConstants.EVENT_PARAM_LEVEL, level);
+//        logger.logEvent(AppEventsConstants.EVENT_NAME_ACHIEVED_LEVEL, params);
+//            params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, contentId);
+//            params.putInt(AppEventsConstants.EVENT_PARAM_SUCCESS, success ? 1 : 0);
+//            logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_TUTORIAL, params);
+    }
+
 
     public static void setViewClickable(View v, boolean e) {
         v.setClickable(e);

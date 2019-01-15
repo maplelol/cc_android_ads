@@ -68,7 +68,7 @@ public class FANRewardedVideo extends AdsUnit implements RewardedVideoAdListener
     public void onRewardedVideoCompleted() {
         System.out.println("FANRewardedVideo onRewardedVideoCompleted");
 
-        this.onStatusUpdate("reward");
+        this.onStatusUpdate("rewarded");
     }
 
     @Override

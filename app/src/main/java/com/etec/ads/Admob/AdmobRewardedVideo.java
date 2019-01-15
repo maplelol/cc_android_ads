@@ -67,7 +67,7 @@ public class AdmobRewardedVideo extends AdsUnit implements RewardedVideoAdListen
     public void onRewarded(RewardItem var1) {
         System.out.println("AdmobRewardedVideo onRewarded");
 
-        this.onStatusUpdate("reward");
+        this.onStatusUpdate("rewarded");
     }
 
     public void onRewardedVideoCompleted() {

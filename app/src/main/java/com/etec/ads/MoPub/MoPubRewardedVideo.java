@@ -43,7 +43,7 @@ public class MoPubRewardedVideo extends AdsUnit {
                     System.out.println("MoPubRewardedVideo onRewardedVideoLoadSuccess " + adUnitId);
 
                     AdsUnit ad = AdsManager.instance().getAds(adUnitId);
-                    if (ad != null && MoPubRewardedVideos.hasRewardedVideo(adUnitId)) {
+                    if (ad != null) {
                         ad.setLoaded(true);
                         ad.setLoading(false);
                         ad.onStatusUpdate("loaded");
